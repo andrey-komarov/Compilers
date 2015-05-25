@@ -3,6 +3,7 @@ module FCC.Optimize.CalcPure (
   calcSubExprs,
   ) where
 
+import Prelude hiding (sequence)
 import FCC.Eval
 import FCC.Expr
 import FCC.Program
@@ -10,9 +11,12 @@ import FCC.Evaluator
 
 import Bound
 
+import Data.Traversable
+import Control.Applicative
+import Data.Monoid ((<>))
 import Data.List (elemIndex)
 import Data.Maybe (fromMaybe)
-import Control.Monad.RWS
+import Control.Monad.RWS hiding (sequence, forM)
 
 import qualified Data.Map as M
 

@@ -2,6 +2,7 @@
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE DeriveTraversable #-}
+{-# LANGUAGE DeriveFoldable #-}
 module FCC.Expr (
   Expr(..),
   declVar,
@@ -9,6 +10,9 @@ module FCC.Expr (
 
 import FCC.Type
 
+import Data.Foldable
+import Data.Traversable
+import Control.Applicative
 import Control.Monad
 
 import Data.Int

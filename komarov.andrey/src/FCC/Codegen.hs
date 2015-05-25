@@ -10,6 +10,7 @@ import FCC.Program
 import Bound
 
 import Data.Monoid
+import Control.Applicative
 import Control.Monad.State
 
 import qualified Data.Map as M

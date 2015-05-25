@@ -13,6 +13,8 @@ import FCC.Optimize.StdlibEval
 
 import Bound
 
+import Data.Foldable as F
+import Control.Applicative
 import Control.Monad.Except
 import Control.Monad.State
 import Control.Monad.Reader
@@ -149,7 +151,7 @@ updPure funs ctx = ctx `S.union` S.fromList [name | (name, f) <- M.toList funs, 
 
 isPure :: S.Set String -> Function String -> Bool
 isPure _ (Function _ _ (Native name _)) = name `M.member` builtinsE
-isPure ctx (Function _ _ (Inner s)) = all (`S.member` ctx) s
+isPure ctx (Function _ _ (Inner s)) = F.all (`S.member` ctx) s
 
 fix' :: Eq a => a -> (a -> a) -> a
 fix' init mod = if new == init then init else fix' new mod where

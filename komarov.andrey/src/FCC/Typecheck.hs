@@ -6,6 +6,8 @@ module FCC.Typecheck (
   runTC,
   ) where
 
+import Prelude hiding (concatMap)
+
 import FCC.Type
 import FCC.TypecheckError
 import FCC.Expr
@@ -14,7 +16,9 @@ import FCC.Program
 import Bound
 
 import Data.Foldable
+import Data.Traversable as T
 import Data.List (elemIndex)
+import Control.Applicative
 import Control.Monad.State
 import Control.Monad.Reader
 import Control.Monad.Except
@@ -61,7 +65,7 @@ instance Typecheckable Program String where
     ff :: Function String -> Typecheck (Function String)
     ff f@Function {body = Native{}} = return f
     ff (Function argTypes ret (Inner s)) = do
-      argNames <- sequence [fresh | _ <- argTypes]
+      argNames <- T.sequence [fresh | _ <- argTypes]
       let e = instantiate ((map Var argNames) !!) s
           args = M.fromList $ zip argNames argTypes
           funs' = fmap (\(Function a r _) -> TFun a r) $ funs
@@ -90,7 +94,7 @@ instance Typecheckable Expr (String, Type) where
     return $ (Seq e1' e2', TVoid)
   typecheck (Call f@(Var _) args) = do
     (f', tf) <- typecheck f
-    args' <- mapM typecheck args
+    args' <- T.mapM typecheck args
     let targs = fmap snd args'
     (tfargs, tfret) <- case tf of
       TFun ta t -> return (ta, t)
